@@ -1,3 +1,22 @@
+/******************************************************************************
+RoboticsUB.cpp - MPU Arduino library.
+Copyright (C) 2020  Albert Álvarez-Carulla
+Repository: https://github.com/Albert-Alvarez/roboticsub-imu
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+******************************************************************************/
+
 #include "RoboticsUB.h"
 
 IMU::IMU() {}
@@ -16,11 +35,9 @@ void IMU::Install(void) {
         DMP_FEATURE_6X_LP_QUAT |    // Enable 6-axis quat
         DMP_FEATURE_GYRO_CAL,       // Use gyro calibration
         10                          // Set DMP FIFO rate to 10 Hz
-    );                       
-    
-    // DMP_FEATURE_LP_QUAT can also be used. It uses the 
-    // accelerometer in low-power mode to estimate quat's.
-    // DMP_FEATURE_LP_QUAT and 6X_LP_QUAT are mutually exclusive
+    );     
+
+    enableInterrupt();
 
     return;
 }
