@@ -21,6 +21,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 IMU imu;
 
+float * rpy; // Pointer to read RPY
+char instruction = 0; // For incoming serial data
+
 void setup() 
 {
 
@@ -34,20 +37,34 @@ void setup()
 
 void loop() 
 {
-  
+
+  if (Serial.available() > 0) {
+    
+    // read the incoming byte:
+    instruction = Serial.read();
+
+    switch(instruction){
+      case 'A':
+
+        rpy = imu.GetRPY();
+              
+        Serial.println(String(rpy[0], 4));
+        Serial.println(String(rpy[1], 4));
+        Serial.println(String(rpy[2], 4));
+
+        break;
+        
+      default:
+        break;
+    }
+
+    instruction = NULL;
+    
+  }  
 }
 
 void imuISR(void) {
-
-  float * q;
   
-  q = imu.GetQuaternion();
+  imu.ReadSensor();
 
-  Serial.println(
-    "Q: " +
-    String(q[0], 4) + ", " +
-    String(q[1], 4) + ", " +
-    String(q[2], 4) + ", " +
-    String(q[3], 4)
-  );
 }

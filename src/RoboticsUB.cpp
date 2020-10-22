@@ -23,8 +23,6 @@ IMU::IMU() {}
 
 void IMU::Install(void) {
 
-    Serial.begin(115200);
-
     if (begin() != INV_SUCCESS) {
         while (1) {
             delay(5000);
@@ -39,23 +37,37 @@ void IMU::Install(void) {
 
     enableInterrupt();
 
-    return;
+}
+
+void IMU::ReadSensor(void) {
+
+    if (fifoAvailable()) {
+        dmpUpdateFifo();
+    }
+
 }
 
 float * IMU::GetQuaternion(void) {
 
     static float q[4];
 
-    if (fifoAvailable()) {
-        if (dmpUpdateFifo() == INV_SUCCESS) {
-    
-            q[0] = calcQuat(qw);
-            q[1] = calcQuat(qx);
-            q[2] = calcQuat(qy);
-            q[3] = calcQuat(qz);
-
-        }
-    }
+    q[0] = calcQuat(qw);
+    q[1] = calcQuat(qx);
+    q[2] = calcQuat(qy);
+    q[3] = calcQuat(qz);
     
     return q;
+}
+
+float * IMU::GetRPY(void) {
+
+    static float rpy[3];
+
+    computeEulerAngles();
+
+    rpy[0] = roll;
+    rpy[1] = pitch;
+    rpy[2] = yaw;
+    
+    return rpy;
 }

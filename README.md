@@ -42,20 +42,43 @@ Inicia la comunicación con la IMU y configura sus registros.
 imu.Install();
 ```
 
+#### ReadSensor()
+
+Realiza la lectura de los valores de la IMU.
+
+```c++
+imu.ReadSensor();
+```
+
 #### GetQuaternion()
 
-Devuelve un puntero a un vector con el cuaternión dela orientación actual de la IMU. 
+Devuelve un puntero a un vector con el cuaternión de la orientación de la IMU.  Los valores devueltos corresponden a los últimos obtenidos mediante la función `ReadSensor()`.
 
 ```c++
 float * q;
 q = imu.GetQuaternion();
 ```
 
-Los elementos `0`, `1`, `2` y `3` del vector corresponden a los componentes `w`, `x`, `y` y `z` del cuaternión `q = w + xi + yj + zk`.
+Los elementos `0`, `1`, `2` y `3` del vector corresponden a los componentes `w`, `x`, `y` y `z`, respectivamente, del cuaternión `q = w + xi + yj + zk`.
+
+#### GetRPY()
+
+Devuelve un puntero a un vector con el *roll*, *pitch* y *yaw* de la orientación de la IMU.  Los valores devueltos corresponden a los últimos obtenidos mediante la función `ReadSensor()`.
+
+```c++
+float * rpy;
+rpy = imu.GetRPY();
+```
+
+Los elementos `0`, `1` y `2` del vector corresponden a los componentes *roll*, *pitch* y *yaw*, respectivamente.
 
 #### Otros
 
 El pin de interrupciones `INT` del MPU-9250 está activado para su uso.
+
+## Ejemplo
+
+El ejemplo incluido para Arduino envía el RPY vía serie para interactuar con el simulador RoboDK. El repositorio también contiene el archivo python utilizado en el simulador RoboDK en `_roboDK/RoboticsUB-TCP_Endowrist_from_IMU.py`.
 
 ## Licencia
 
