@@ -56,7 +56,7 @@ void loop()
         Serial.println(String(rpw[0], 4));
         Serial.println(String(rpw[1], 4));
         Serial.println(String(rpw[2], 4));    
-        Serial.println(String(torque));    
+        Serial.println(String(torque, 4));    
 
         break;
         
