@@ -49,9 +49,6 @@ RDK = Robolink()
 # Define the "robot" variable with our robot (UR5e)
 robot = RDK.Item ('UR5e')
 
-# Define the "home" variable with the initial position of our robot
-home = RDK.Item ('Home')
-
 # Define the "tcp" variable with the TCP of Endowrist needle
 tcp_tool = RDK.Item('TCP_Endowrist')
 
@@ -60,33 +57,17 @@ if robot.Valid():
     print('Robot selected: ' + robot.Name())
 if tcp_tool.Valid():
     print('Tool selected: ' + tcp_tool.Name())
-if home.Valid():
-    print('Initial position: ' + home.Name())
 
-# Matrixes that shows the Endowrist pose (TCP of Endowrist)
-pose_tool = robot.Pose
-
-# Tool frame with respect to Reference Frame
-print ('Robot POSE is: ' + repr(pose_tool()))
-
+# Robot Flange with respect to UR5e base Frame
+print ('Robot POSE is: ' + repr(robot.Pose()))
 # Tool frame with respect to Robot Flange
-print ('Tool TCP pose is: ' + repr(tcp_tool.PoseTool()))
+print ('Robot POSE is: ' + repr(robot.PoseTool()))
+# Tool frame with respect to Tool frame
+print ('TCP pose is: ' + repr(tcp_tool.Pose()))
 
 # ------------------------------------------------------------------------------
-# Suture points
+# Reference frame is fixed to TCP
 # ------------------------------------------------------------------------------
-
-# Define the x,y,z value for first point (this values are the same for all
-# suture points)
-X = 0
-Y = -58
-Z = 320
-
-# Print the defined coordinates (x,y,z)
-print ('The coordinates (x,y,z) for the fist point are:')
-print ('X is: ' + str(X))
-print ('Y is: ' + str(Y))
-print ('Z is: ' + str(Z) + '\n')
 
 # ------------------------------------------------------------------------------
 # Data comunication
@@ -111,23 +92,27 @@ try:
         yaw = float(yaw_str)
 
         # Print the integer value of roll, pitch and yaw angles in degrees
-        print('The R,P,Y angles (in degrees) from the MPU movements are: ')
-        print('roll  (x-forward (north)): ' + str(roll))
-        print('pitch (y-right (east): ' + str(pitch))
-        print('yaw   (z-down (down)): ' + str(yaw) + '\n')
+        #print('The R,P,Y angles (in degrees) from the MPU movements are: ')
+        #print('roll  (x-forward (north)): ' + str(roll))
+        #print('pitch (y-right (east): ' + str(pitch))
+        #print('yaw   (z-down (down)): ' + str(yaw) + '\n')
 
         # Convert from degrees to radians R,P,Y angles
         R = math.radians(roll)
         P = math.radians(pitch)
         W = math.radians(yaw)
-
+        X=0
+        Y=-60
+        Z=320
+        
         # Calculate the POSE matrix (UR)
-    
+        
+        #print ('The POSE matrix is: ' + repr(pose_matrix))
 
         # Define the Endowrist TCP POSE in the first suture point (1st point)
         # by first point matrix POSE:
         tcp_tool_pose = tcp_tool.setPoseTool(pose_matrix)
-        print ('Tool TCP pose in first point is: ' + repr(tcp_tool_pose.PoseTool()) + '\n')
+        print ('Tool TCP pose is: ' + repr([R,P,Y]) + '\n')
 
 except KeyboardInterrupt:
     print("Communication stopped.")
