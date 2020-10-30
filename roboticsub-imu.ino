@@ -79,8 +79,6 @@ void loop()
   servo1.write(motor_angle);
   
   torque = analogRead(Pin_R1) * (3.3 / 1023.0) / R1;
-
-  delay(10);
   
 }
 
