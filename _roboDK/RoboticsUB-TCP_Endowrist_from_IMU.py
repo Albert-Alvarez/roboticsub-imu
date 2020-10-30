@@ -119,11 +119,10 @@ try:
         # Convert from degrees to radians R,P,Y angles
         R = math.radians(roll)
         P = math.radians(pitch)
-        Y = math.radians(yaw)
+        W = math.radians(yaw)
 
         # Calculate the POSE matrix (UR)
-        pose_matrix = UR_2_Pose([X, Y, Z, R, P, Y])
-        print ('The POSE matrix for the fisrt point is: ' + repr(pose_matrix))
+    
 
         # Define the Endowrist TCP POSE in the first suture point (1st point)
         # by first point matrix POSE:
