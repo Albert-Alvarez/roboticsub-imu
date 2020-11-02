@@ -34,7 +34,7 @@ from robodk import *
 # ------------------------------------------------------------------------------
 
 # Establish the connection on a specific port (COM3)
-arduino = serial.Serial('COM3', 115200, timeout=1)
+arduino = serial.Serial('COM8', 115200, timeout=1)
 
 # Lets bring some time to the system to stablish the connetction
 time.sleep(2)
@@ -68,15 +68,10 @@ print ('TCP pose is: ' + repr(tcp_tool.Pose()))
 
 # ------------------------------------------------------------------------------
 # Reference frame is fixed to TCP
-# ------------------------------------------------------------------------------
-
-# ------------------------------------------------------------------------------
+#
 # Data comunication
 # ------------------------------------------------------------------------------
-# Generate the main window
-        root = Tk()
-        root.title("Endowrist_Haptic")
-        Label(root, text="Torque (V)").pack()
+# 
 try:
     while True:
 
@@ -95,13 +90,7 @@ try:
         roll = float(roll_str)
         pitch = float(pitch_str)
         yaw = float(yaw_str)
-        torque = int(torque_str)
-
-        # Print the integer value of roll, pitch and yaw angles in degrees
-        #print('The R,P,Y angles (in degrees) from the MPU movements are: ')
-        #print('roll  (x-forward (north)): ' + str(roll))
-        #print('pitch (y-right (east): ' + str(pitch))
-        #print('yaw   (z-down (down)): ' + str(yaw) + '\n')
+        torque = float(torque_str)
 
         # Convert from degrees to radians R,P,Y angles
         R = math.radians(roll)
@@ -113,20 +102,10 @@ try:
         
         # Calculate the POSE matrix (UR)
         pose_matrix = transl([X, Y, Z])*rotx(pi)*rotx(-R)*roty(-P)*rotz(-W)
-        #print ('The POSE matrix is: ' + repr(pose_matrix))
-
-        # Define the Endowrist TCP POSE in the first suture point (1st point)
-        # by first point matrix POSE:
         tcp_tool_pose = tcp_tool.setPoseTool(pose_matrix)
-        print ('Tool TCP pose is: ' + repr([R,P,Y]) + '\n')
+        #print ('Tool TCP pose is: ' + repr([R,P,Y]) + '\n')
         print ('Torke Endowrist is: ' + repr([torque]) + '\n')
        
-        # Use variables linked to the global variables
-        entry_torque = floatVar()
-        entry_torque.set(torque)
-        entry_torque=Scale(root, from_=0, to=5, orient=HORIZONTAL)
-        entry_torque.pack()
-        root.mainloop()
         
 except KeyboardInterrupt:
     print("Communication stopped.")

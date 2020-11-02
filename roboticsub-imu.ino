@@ -26,9 +26,9 @@ Servo servo1;
 float *rpw;           // Pointer to read RPW
 char instruction = 0; // For incoming serial data
 int Pin_R1 = A0;      // Analogic pin used by R1 (Servo1)
-float R1 = 4.7;       // Resistance value
+float R1 = 1;       // Resistance value
 float torque = 0;     // Indicated as current (ampere)
-int motor_angle = 0;  // Motor angle
+float motor_angle = 0;  // Motor angle
 
 void setup()
 {
@@ -48,10 +48,9 @@ void loop()
   // Angle range from 0 to 180 degrees
   if (rpw[2] <= 180 && rpw[2] >= 0)
   {
-    motor_angle = (int)rpw[2];
+    motor_angle = rpw[2];
   }
 
-  motor_angle = (int)rpw[2];
   servo1.write(motor_angle);
 
   torque = analogRead(Pin_R1) * (3.3 / 1023.0) / R1;
