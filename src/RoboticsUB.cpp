@@ -59,15 +59,15 @@ float * IMU::GetQuaternion(void) {
     return q;
 }
 
-float * IMU::GetRPY(void) {
+float * IMU::GetRPW(void) {
 
-    static float rpy[3];
+    static float rpw[3];
 
     computeEulerAngles();
 
-    rpy[0] = roll;
-    rpy[1] = pitch;
-    rpy[2] = yaw;
+    rpw[0] = roll;
+    rpw[1] = pitch;
+    rpw[2] = yaw;
     
-    return rpy;
+    return rpw;
 }

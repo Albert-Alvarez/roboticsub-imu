@@ -23,67 +23,60 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 IMU imu;
 Servo servo1;
 
-float * rpw; // Pointer to read RPW
+float *rpw;           // Pointer to read RPW
 char instruction = 0; // For incoming serial data
-int Pin_R1 = A0; // Analogic pin used by R1 (Servo1)
-float R1 = 4.7; // Resistance value
-float torque = 0; // Indicated as current (ampere)
-float motor_angle = 0; // Motor angle
+int Pin_R1 = A0;      // Analogic pin used by R1 (Servo1)
+float R1 = 4.7;       // Resistance value
+float torque = 0;     // Indicated as current (ampere)
+int motor_angle = 0;  // Motor angle
 
-void setup() 
+void setup()
 {
 
   Serial.begin(115200);
-  
+
   imu.Install();
   servo1.attach(9);
-
-  attachInterrupt(digitalPinToInterrupt(8), imuISR, RISING);
-  
 }
 
-void loop() 
+void loop()
 {
 
-  if (Serial.available() > 0) {
-    
+  imu.ReadSensor();
+  rpw = imu.GetRPW();
+
+  // Angle range from 0 to 180 degrees
+  if (rpw[2] <= 180 && rpw[2] >= 0)
+  {
+    motor_angle = (int)rpw[2];
+  }
+
+  motor_angle = (int)rpw[2];
+  servo1.write(motor_angle);
+
+  torque = analogRead(Pin_R1) * (3.3 / 1023.0) / R1;
+
+  if (Serial.available() > 0)
+  {
+
     // read the incoming byte:
     instruction = Serial.read();
 
-    switch(instruction){
-      case 'A':        
-              
-        Serial.println(String(rpw[0], 4));
-        Serial.println(String(rpw[1], 4));
-        Serial.println(String(rpw[2], 4));    
-        Serial.println(String(torque, 4));    
+    switch (instruction)
+    {
+    case 'A':
 
-        break;
-        
-      default:
-        break;
+      Serial.println(String(rpw[0], 4));
+      Serial.println(String(rpw[1], 4));
+      Serial.println(String(rpw[2], 4));
+      Serial.println(String(torque, 4));
+
+      break;
+
+    default:
+      break;
     }
 
     instruction = NULL;
-    
-  }  
-
-  rpw = imu.GetRPW();
-  
-  // Angle range from 0 to 180 degrees
-  
-  if (rpw[2] <= 180 && rpw[2] >= 0) {
-    motor_angle = rpw[2]; 
   }
-  
-  servo1.write(motor_angle);
-  
-  torque = analogRead(Pin_R1) * (3.3 / 1023.0) / R1;
-  
-}
-
-void imuISR(void) {
-  
-  imu.ReadSensor();
-
 }

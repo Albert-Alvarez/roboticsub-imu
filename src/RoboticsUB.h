@@ -28,7 +28,7 @@ class IMU: public MPU9250_DMP {
         void Install(void);
         void ReadSensor(void);
         float * GetQuaternion(void);
-        float * GetRPY(void);
+        float * GetRPW(void);
 };
 
 #endif
