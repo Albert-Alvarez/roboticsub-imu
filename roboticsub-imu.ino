@@ -24,9 +24,10 @@ IMU imu;
 Servo servo1;
 
 float *rpw;           // Pointer to read RPW
+float *q;             // Pointer to quaternion
 char instruction = 0; // For incoming serial data
 int Pin_R1 = A0;      // Analogic pin used by R1 (Servo1)
-float R1 = 1;       // Resistance value
+float R1 = 1.6;       // Resistance value
 float torque = 0;     // Indicated as current (ampere)
 float motor_angle = 0;  // Motor angle
 
@@ -44,6 +45,7 @@ void loop()
 
   imu.ReadSensor();
   rpw = imu.GetRPW();
+  q = imu.GetQuaternion();
 
   // Angle range from 0 to 180 degrees
   if (rpw[2] <= 180 && rpw[2] >= 0)
@@ -58,7 +60,6 @@ void loop()
   if (Serial.available() > 0)
   {
 
-    // read the incoming byte:
     instruction = Serial.read();
 
     switch (instruction)
@@ -72,10 +73,22 @@ void loop()
 
       break;
 
+    case 'B':
+    
+      Serial.println(String(q[0], 4));
+      Serial.println(String(q[1], 4));
+      Serial.println(String(q[2], 4));
+      Serial.println(String(q[3], 4));
+      Serial.println(String(torque, 4));
+      
+      break;
+      
     default:
       break;
     }
 
     instruction = NULL;
+    
   }
+
 }
