@@ -23,6 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 IMU imu;
 Servo servo1;
 
+int PIN_IMU_VCC = 4;
+int PIN_IMU_INT = 5;
 float *rpw;           // Pointer to read RPW
 float *q;             // Pointer to quaternion
 char instruction = 0; // For incoming serial data
@@ -36,16 +38,25 @@ void setup()
 
   Serial.begin(115200);
 
+  // Power the IMU from pin to reset
+  pinMode(PIN_IMU_VCC, OUTPUT);
+  digitalWrite(PIN_IMU_VCC, LOW);
+  delay(100);
+  digitalWrite(PIN_IMU_VCC, HIGH);
+
   imu.Install();
   servo1.attach(9);
+  
 }
 
 void loop()
 {
 
-  imu.ReadSensor();
-  rpw = imu.GetRPW();
-  q = imu.GetQuaternion();
+  if (digitalRead(PIN_IMU_INT) == HIGH) {
+    imu.ReadSensor();
+    rpw = imu.GetRPW();
+    q = imu.GetQuaternion();
+  }
 
   // Angle range from 0 to 180 degrees
   if (rpw[2] <= 180 && rpw[2] >= 0)
